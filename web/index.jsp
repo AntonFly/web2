@@ -38,8 +38,7 @@
       </ul>
     </td>
     <td class="task_col">
-      <img src="img/Task.png" alt="График">
-      <!--<input type="text"  id="test">-->
+            <canvas id="grid"></canvas>
     </td>
 
   </tr>
@@ -78,7 +77,7 @@
                            maxlength="5" size="20"></td>
 
             </tr>
-            
+
 
             <tr>
               <td></td>
