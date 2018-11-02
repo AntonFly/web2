@@ -116,3 +116,7 @@ table#messages::-webkit-scrollbar-thumb{
 .xTr, .xTr td {
    text-align: left;
 }
+#grid{
+    width: 100%;
+    height: 100%;
+}

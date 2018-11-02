@@ -1,52 +1,60 @@
-var button_now;
-
 
 let form = document.getElementById("xyr_form");
+let canvas = document.getElementById("grid");
+canvas.addEventListener("click", function () {
+    canvasListener(canvas);
+});
 let validatListener = validateY;
 form.addEventListener("input", validatListener);
+form.elements["R"].addEventListener("input", checkR);
 
-$.ajax({
-    url: "session.php",
-    dataType:"json",
-    success:function(sessionRows){
-        var mass = sessionRows["rows"];
-        if(!(mass.length === undefined ||mass.length == null)){
-            creatResTable();
-            for (let row in mass){
-                addRow(mass[row]);
-            }
-        }
-    },
-    xhrFields: {
-        withCredentials: true
-    }
-});
-
-//AJAX
-$(function() {
-    $(form).submit(function(e) {
-        e.preventDefault();
-        var $form = $(this);
-        $.ajax({
-            type: $form.attr('method'),
-            url: $form.attr('action'),
-            data: $form.serialize(),
-            dataType:"json",
-            response:"json",
-            beforeSend: function(){
-                if(!validateY()){
-                    return false
-                }
-            },
-            success:addRow
-        }).done(function() {
-            console.log('success');
-        }).fail(function() {
-            console.log('fail');
-        });
-    });
-});
+let dotsArray = [];
+window.onload = getSessionData;
+// $.ajax({
+//     url: "session.php",
+//     dataType:"json",
+//     success:function(sessionRows){
+//         var mass = sessionRows["rows"];
+//         if(!(mass.length === undefined ||mass.length == null)){
+//             creatResTable();
+//             for (let row in mass){
+//                 addRow(mass[row]);
+//             }
+//         }
+//     },
+//     xhrFields: {
+//         withCredentials: true
+//     }
+// });
+//
+// //AJAX
+// $(function() {
+//     $(form).submit(function(e) {
+//         e.preventDefault();
+//         var $form = $(this);
+//         $.ajax({
+//             type: $form.attr('method'),
+//             url: $form.attr('action'),
+//             data: $form.serialize(),
+//             dataType:"json",
+//             response:"json",
+//             beforeSend: function(){
+//                 if(!validateY()){
+//                     return false
+//                 }
+//             },
+//             success:addRow
+//         }).done(function() {
+//             console.log('success');
+//         }).fail(function() {
+//             console.log('fail');
+//         });
+//     });
+// });
 //~~~~~~~~~~~~~~~~~~~~~~~//
+function checkR(){
+      drawCanvas(canvas, form.elements["r-buttons"].value)
+}
 
  function creatResTable() {
                  let  resCol = document.getElementById("resCol")
@@ -133,32 +141,149 @@ $(function() {
      }
 
  }
-// window.onload = function(){
-// document.getElementById("test").onkeypress = function (ev) {
-//
-//     symb = ev.key.toLowerCase();
-//
-//     if(symb>=0 && symb <=9){
-//         return true;
-//     }
-//
-//     if(symb>='a' && symb<='z'){
-//         return true;
-//     }
-//
-//     return false;
-// }}
 
-// function button_click(_button) {
-//     _button.style.background = 'white';
-//
-//     _button.style.width = '38px';
-//     _button.style.height = '29px';
-//
-//
-//     if(button_now!=null && button_now!=_button){
-//         button_now.style.background='';
-//     }
-//     button_now = _button;
-// }
+function getSessionData() {
+    drawCanvas(canvas, 2);
+    // fetch("ControllerServlet?getSession=true", {
+    //     credentials: "include",
+    // }).then(function (response) {
+    //     response.json().then(function (sessionRows) {
+    //         if (sessionRows.length > 0) {
+    //             creatResTable();
+    //             for (let row in sessionRows) {
+    //                 addRow(sessionRows[row]);
+    //             }
+    //         }
+    //         drawCanvas(canvas, 2);
+    //     })
+    // });
+}
+function drawCanvas(canvas, r) {
+    if (canvas.getContext) {
+        var context = canvas.getContext("2d");
 
+        var width = canvas.width;
+        var height = canvas.height;
+
+        var half_width = width / 2;
+        var half_height = height / 2;
+
+        var quarter_width = half_width / 2 - (width / 20);
+        var quarter_height = half_height / 2 - (height / 20);
+
+        context.clearRect(0, 0, width, height);
+
+
+        context.strokeStyle = "black";
+        context.fillStyle = "black";
+
+        //Create grid
+        {
+            context.beginPath();
+            context.font = "10px sans-serif";
+            context.moveTo(0, half_height);
+            context.lineTo(width, half_height);
+            context.lineTo(width - 8, half_height + 3);
+            context.lineTo(width - 8, half_height - 3);
+            context.lineTo(width, half_height);
+            context.fillText("X", width - 8, half_height - 7);
+
+            context.moveTo(half_width, 0);
+            context.lineTo((half_width) - 3, 8);
+            context.lineTo((half_width) + 3, 8);
+            context.lineTo(half_width, 0);
+            context.lineTo(half_width, height);
+            context.fillText("Y", half_width + 5, 10);
+
+
+            context.moveTo(half_width - 2 * quarter_width, half_height - 4);
+            context.lineTo(half_width - 2 * quarter_width, half_height + 4);
+            context.fillText(-r, half_width - 2 * quarter_width - 5, half_height - 6);
+
+            context.moveTo(half_width - 1 * quarter_width, half_height - 4);
+            context.lineTo(half_width - 1 * quarter_width, half_height + 4);
+            context.fillText(-r / 2, half_width - 1 * quarter_width - 8, half_height - 6);
+
+            context.moveTo(half_width + 2 * quarter_width, half_height - 4);
+            context.lineTo(half_width + 2 * quarter_width, half_height + 4);
+            context.fillText(r, half_width + 2 * quarter_width - 3, half_height - 6);
+
+            context.moveTo(half_width + 1 * quarter_width, half_height - 4);
+            context.lineTo(half_width + 1 * quarter_width, half_height + 4);
+            context.fillText(r / 2, half_width + 1 * quarter_width - 5, half_height - 6);
+
+
+            context.moveTo(half_width - 4, half_height - (2 * quarter_height));
+            context.lineTo(half_width + 4, half_height - (2 * quarter_height));
+            context.fillText(r, half_width + 5, half_height - 2 * quarter_height + 4);
+
+            context.moveTo(half_width - 4, half_height - (1 * quarter_height));
+            context.lineTo(half_width + 4, half_height - (1 * quarter_height));
+            context.fillText(r / 2, half_width + 5, half_height - 1 * quarter_height + 4);
+
+            context.moveTo(half_width - 4, half_height + (2 * quarter_height));
+            context.lineTo(half_width + 4, half_height + (2 * quarter_height));
+            context.fillText(-r, half_width + 5, half_height + 2 * quarter_height + 4);
+
+            context.moveTo(half_width - 4, half_height + (1 * quarter_height));
+            context.lineTo(half_width + 4, half_height + (1 * quarter_height));
+            context.fillText(-r / 2, half_width + 5, half_height + 1 * quarter_height + 4);
+
+            context.closePath();
+            context.strokeStyle = "black";
+            context.fillStyle = "black";
+            context.stroke();
+            context.fill();
+        }
+
+        //Create figure
+        {
+            context.beginPath();
+            context.moveTo(half_width, half_height);
+            context.ellipse(half_width, half_height, quarter_width, quarter_height, 0, 0, Math.PI  / 2, false);
+            context.rect(half_width - 2*quarter_width, half_height -  quarter_height, 2*quarter_width, quarter_height);
+
+            context.moveTo(half_width, half_height);
+            context.lineTo(half_width, half_height - quarter_height);
+            context.lineTo(half_width + 2*quarter_width, half_height);
+            context.lineTo(half_width, half_height);
+
+            context.closePath();
+            context.fillStyle = 'rgba(0, 97, 255, 0.7)';
+            context.fill();
+        }
+        context.strokeStyle = "orange";
+        context.fillStyle = "orange";
+
+        //Create point of answer
+        dotsArray.forEach(function (dot) {
+            var pointer_x = (dot.x / r) * quarter_width * 2;
+            var pointer_y = (dot.y / r) * quarter_height * 2;
+
+            context.beginPath();
+            context.arc(half_width + pointer_x, half_height - pointer_y, 1, 2 * Math.PI, 0);
+            context.closePath();
+            context.fill();
+            context.stroke();
+        });
+    }
+
+}
+        function canvasListener(canvas) {
+            let width = canvas.width;
+            let height = canvas.height;
+
+            let r = new FormData(form).get("r-buttons");
+            if (r !== null) {
+                removeErrorR();
+                let posX = event.pageX - canvas.offsetLeft;
+                let posY = event.pageY - canvas.offsetTop;
+                let coorX = ((posX - 163) / 130 * r).toFixed(3);
+                let coorY = (-(posY - 139) / 108 * r).toFixed(3);
+                let formData = new FormData;
+                formData.append("x-input", coorX);
+                formData.append("y-input", coorY);
+                formData.append("r-buttons", r);
+                sendClickCoors(formData, true);
+            } else showErrorR();
+        }
