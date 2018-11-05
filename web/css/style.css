@@ -27,7 +27,6 @@ tr{
 
 }
 th{
-    cellpadding:"0"; cellspacing:"0";
         /*border-top: 2px solid green;*/
     border-bottom: 2px solid #af000f;
 }
@@ -38,7 +37,7 @@ td{
 }
 .header {
 
-    mso-cellspacing: 0px;
+    mso-cellspacing: 0;
     font-family: sans-serif;
     font-size: 24px;
     color: #22ddca;
@@ -78,12 +77,14 @@ img {
 }
 .task_col{
     width: 50%;
-    cellpadding:"0"; cellspacing:"0";
     border-bottom: 2px solid #af000f;
+    align-items: center;
+    align-content: center;
 }
 #ch_block{
     height: 250px ;
     vertical-align: middle;
+    margin: auto;
 
 }
 #resCol{
@@ -93,6 +94,7 @@ img {
 }
 #res_table{
     width: 450px;
+    margin: auto;
 }
 #res_table, #res_table tr, #res_table td {
     border: 1px solid black;
@@ -117,6 +119,14 @@ table#messages::-webkit-scrollbar-thumb{
    text-align: left;
 }
 #grid{
-    width: 100%;
-    height: 100%;
+    padding: 20px;
+    display: block;
+    margin-left: auto;
+    /*height: 400px;*/
+    /*width: 400px;*/
+    background-color: #ffffff;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin-right: auto;
+    align-items: center;
 }
