@@ -300,8 +300,8 @@ function canvasListener(canvas) {
            let r = new FormData(form).get("R");
            if (r !== "") {
                removeError("R");
-               let posX = event.pageX - canvas.getBoundingClientRect().left;
-               let posY = event.pageY - canvas.getBoundingClientRect().top;
+               let posX=event.pageX-getOffsetRect(canvas).left;
+               let posY =event.pageY-getOffsetRect(canvas).top;
                let deltaX=canvas.width/2+padding;
                let deltaY=canvas.height/2+padding;
                let coorX = ((posX - deltaX) / (2*quarter_width/r) ).toFixed(3);
@@ -341,4 +341,16 @@ function sendClickCoors(formData, click) {
         .catch(function (exception) {
             alert(exception.toString());
         })
+}
+function getOffsetRect(elem) {
+    let box = elem.getBoundingClientRect();
+    let body = document.body;
+    let docElem = document.documentElement;
+    let scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+    let scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+    let clientTop = docElem.clientTop || body.clientTop || 0;
+    let clientLeft = docElem.clientLeft || body.clientLeft || 0;
+    let top  = box.top +  scrollTop - clientTop;
+    let left = box.left + scrollLeft - clientLeft;
+    return { top: Math.round(top), left: Math.round(left) }
 }
