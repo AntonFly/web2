@@ -153,6 +153,17 @@ function validateR() {
                 form.elements[pol].classList.add("error_input");
             }
     }
+function showErrorConv() {
+
+    let Block= document.getElementById("task_col");
+    if(!Block.contains(document.getElementById("convErr"))){
+        let errorSpan = document.createElement("div");
+        errorSpan.id = "convErr";
+        errorSpan.innerHTML= "ВВедите значение R";
+        Block.appendChild(errorSpan);
+        form.elements[pol].classList.add("NoR");
+    }
+}
 
  function removeError(pol) {
     let input,error;
@@ -177,6 +188,15 @@ function validateR() {
      }
 
  }
+function removeErrorConv() {
+
+    let Block = document.getElementById("task_col");
+    if (Block.contains(document.getElementById("convErr"))){
+        Block.removeChild(document.getElementById("convErr"));
+        form.elements[pol].classList.remove("Nor");
+    }
+
+}
 
 function getSessionData() {
     fetch("ControllerServlet?getSession=true", {
@@ -299,19 +319,20 @@ function canvasListener(canvas) {
            let padding=parseInt($("#grid").css("padding"))+parseInt($("#grid").css("border"));
            let r = new FormData(form).get("R");
            if (r !== "") {
-               removeError("R");
+               // removeErrorConv();
                let posX=event.pageX-getOffsetRect(canvas).left;
                let posY =event.pageY-getOffsetRect(canvas).top;
                let deltaX=canvas.width/2+padding;
                let deltaY=canvas.height/2+padding;
                let coorX = ((posX - deltaX) / (2*quarter_width/r) ).toFixed(3);
                let coorY = ((-posY + deltaY) / (2*quarter_height/r) ).toFixed(3);
+               alert(coorX+" "+coorX);
                let formData = new FormData;
                formData.append("X", coorX);
                formData.append("Y", coorY);
                formData.append("R", r);
                 sendClickCoors(formData, true);
-           } else showError("R");
+           } else true;//showErrorConv();
 }
 
 function sendClickCoors(formData, click) {
